@@ -54,22 +54,25 @@ public class Main {
         decrypt_AES_CTR("file-large.bin",aesCTR,aes256,ctrIv);
     // Q1.d
         System.out.println("Q1.d");
-        System.out.print("SHA256: ");
-        System.out.println("Small File");
+        System.out.println("SHA256: ");
+        System.out.println("Small File:");
         printHex(hash_256("file-small.bin"));
-        System.out.println("Large File");
+        System.out.println();
+        System.out.println("Large File:");
         printHex(hash_256("file-large.bin"));
         System.out.println();
-        System.out.print("SHA512: ");
-        System.out.println("Small File");
+        System.out.println("SHA512: ");
+        System.out.println("Small File:");
         printHex(hash_512("file-small.bin"));
-        System.out.println("Large File");
+        System.out.println();
+        System.out.println("Large File:");
         printHex(hash_512("file-large.bin"));
         System.out.println();
         System.out.print("SHA3-256: ");
-        System.out.println("Small File");
+        System.out.println("Small File:");
         printHex(hash_sha3256("file-small.bin"));
-        System.out.println("Large File");
+        System.out.println();
+        System.out.println("Large File:");
         printHex(hash_sha3256("file-large.bin"));
         System.out.println();
 	// Q1.e
@@ -176,9 +179,9 @@ public class Main {
         //File path
         Cipher aesCBC = instance;
         IvParameterSpec ivspec = iv;
-        String outputPath = "src/com/pratik/Data/AES_CBC_"+aesCBCKey.getEncoded().length*8+"_EN-"+filepath;
+        String outputPath = "./com/pratik/Data/AES_CBC_"+aesCBCKey.getEncoded().length*8+"_EN-"+filepath;
         OutputStream outputstream = new FileOutputStream(outputPath);
-        filepath = "src/com/pratik/Data/"+filepath;
+        filepath = "./com/pratik/Data/"+filepath;
         InputStream inputstream = new FileInputStream(filepath);
         int size = inputstream.available();
 
@@ -216,8 +219,8 @@ public class Main {
     public static void decrypt_AES_CBC(String filename,Cipher instance,SecretKey aesCBCKey,IvParameterSpec iv)  throws InvalidKeyException, IOException, BadPaddingException, IllegalBlockSizeException, InvalidAlgorithmParameterException {
         Cipher aesCBC = instance;
         IvParameterSpec ivspec = iv;
-        InputStream DECinputstream = new FileInputStream("src/com/pratik/Data/AES_CBC_"+aesCBCKey.getEncoded().length*8+"_EN-"+filename);
-        OutputStream DECoutputstream = new FileOutputStream("src/com/pratik/Data/AES_CBC_"+aesCBCKey.getEncoded().length*8+"_DEC-"+filename);
+        InputStream DECinputstream = new FileInputStream("./com/pratik/Data/AES_CBC_"+aesCBCKey.getEncoded().length*8+"_EN-"+filename);
+        OutputStream DECoutputstream = new FileOutputStream("./com/pratik/Data/AES_CBC_"+aesCBCKey.getEncoded().length*8+"_DEC-"+filename);
 
         int size = DECinputstream.available();
         //System.out.println(size);
@@ -247,14 +250,14 @@ public class Main {
         DECoutputstream.close();
         DECinputstream.close();
 
-        System.out.println("CBC Decryption as:"+"src/com/pratik/Data/AES_CBC_"+aesCBCKey.getEncoded().length*8+"_DEC-"+filename);
+        System.out.println("CBC Decryption as:"+"./com/pratik/Data/AES_CBC_"+aesCBCKey.getEncoded().length*8+"_DEC-"+filename);
     }
 
     public static  void encrypt_AES_CTR(String filepath,Cipher instance,SecretKey aesKey,IvParameterSpec iv) throws IOException, InvalidKeyException, BadPaddingException, IllegalBlockSizeException, InvalidAlgorithmParameterException {
         //File path
-        String outputPath = "src/com/pratik/Data/AES_CTR_"+aesKey.getEncoded().length*8+"_EN-"+filepath;
+        String outputPath = "./com/pratik/Data/AES_CTR_"+aesKey.getEncoded().length*8+"_EN-"+filepath;
         OutputStream outputstream = new FileOutputStream(outputPath);
-        filepath = "src/com/pratik/Data/"+filepath;
+        filepath = "./com/pratik/Data/"+filepath;
         InputStream inputstream = new FileInputStream(filepath);
         int size = inputstream.available();
 
@@ -287,8 +290,8 @@ public class Main {
     }
 
     public static void decrypt_AES_CTR(String filepath,Cipher instance,SecretKey aesKey,IvParameterSpec iv) throws IOException, InvalidKeyException, BadPaddingException, IllegalBlockSizeException, InvalidAlgorithmParameterException{
-        InputStream DECinputstream = new FileInputStream("src/com/pratik/Data/AES_CTR_"+aesKey.getEncoded().length*8+"_EN-"+filepath);
-        OutputStream DECoutputstream = new FileOutputStream("src/com/pratik/Data/AES_CTR_"+aesKey.getEncoded().length*8+"_DEC-"+filepath);
+        InputStream DECinputstream = new FileInputStream("./com/pratik/Data/AES_CTR_"+aesKey.getEncoded().length*8+"_EN-"+filepath);
+        OutputStream DECoutputstream = new FileOutputStream("./com/pratik/Data/AES_CTR_"+aesKey.getEncoded().length*8+"_DEC-"+filepath);
 
         //int size = DECinputstream.available();
         //System.out.println(size);
@@ -319,7 +322,7 @@ public class Main {
         DECoutputstream.flush();
         DECoutputstream.close();
         DECinputstream.close();
-        System.out.println("CTR Decryption as:"+"src/com/pratik/Data/AES_CTR_"+aesKey.getEncoded().length*8+"_DEC-file-small.bin");
+        System.out.println("CTR Decryption as:"+"./com/pratik/Data/AES_CTR_"+aesKey.getEncoded().length*8+"_DEC-file-small.bin");
     }
 
     public static void printHex(byte[] input){
@@ -334,7 +337,7 @@ public class Main {
 
     public static byte[] hash_256(String filepath) throws NoSuchAlgorithmException, IOException {
         //File path
-        filepath = "src/com/pratik/Data/"+filepath;
+        filepath = "./com/pratik/Data/"+filepath;
         InputStream inputstream = new FileInputStream(filepath);
 
         MessageDigest messeagedigest = MessageDigest.getInstance("SHA-256");
@@ -364,7 +367,7 @@ public class Main {
 
     public static byte[] hash_512(String filepath) throws NoSuchAlgorithmException, IOException {
         //File path
-        filepath = "src/com/pratik/Data/"+filepath;
+        filepath = "./com/pratik/Data/"+filepath;
         InputStream inputstream = new FileInputStream(filepath);
 
         MessageDigest messeagedigest = MessageDigest.getInstance("SHA-512");
@@ -394,7 +397,7 @@ public class Main {
 
     public static byte[] hash_sha3256(String filepath) throws IOException {
         //File path
-        filepath = "src/com/pratik/Data/"+filepath;
+        filepath = "./com/pratik/Data/"+filepath;
         InputStream inputstream = new FileInputStream(filepath);
         int size = inputstream.available();
         SHA3.DigestSHA3 messagedigest = new SHA3.Digest256();
@@ -429,9 +432,9 @@ public class Main {
 
     public static void encrypt_rsa(String filepath,Cipher rsa,RSAPublicKey publicKey,int keySize) throws IOException, InvalidKeyException, BadPaddingException, IllegalBlockSizeException {
         //File path
-        String outputPath = "src/com/pratik/Data/RSA_EN_"+keySize+"-"+filepath;
+        String outputPath = "./com/pratik/Data/RSA_EN_"+keySize+"-"+filepath;
         OutputStream outputstream = new FileOutputStream(outputPath);
-        filepath = "src/com/pratik/Data/"+filepath;
+        filepath = "./com/pratik/Data/"+filepath;
         InputStream inputstream = new FileInputStream(filepath);
         //int size = inputstream.available();
         //System.out.println(size);
@@ -472,9 +475,9 @@ public class Main {
     public static void decrypt_rsa(String filepath,Cipher rsa,RSAPrivateKey privateKey,int keySize) throws InvalidKeyException, IOException, BadPaddingException, IllegalBlockSizeException, InvalidAlgorithmParameterException, NoSuchPaddingException, NoSuchAlgorithmException {
         // Solving Error of Padding:https://stackoverflow.com/questions/32161720/breaking-down-rsa-ecb-oaepwithsha-256andmgf1padding
         //File path
-        String inpath = "src/com/pratik/Data/RSA_EN_"+keySize+"-"+filepath;
+        String inpath = "./com/pratik/Data/RSA_EN_"+keySize+"-"+filepath;
         InputStream inputstream = new FileInputStream(inpath);
-        filepath = "src/com/pratik/Data/RSA_DEC_"+keySize+"-"+filepath;
+        filepath = "./com/pratik/Data/RSA_DEC_"+keySize+"-"+filepath;
         OutputStream outputstream = new FileOutputStream(filepath);
         int blockSize = 1;
         if (keySize == 2048){
@@ -519,7 +522,7 @@ public class Main {
     }
 
     public static byte[] dsa_sign(String filepath, Signature dsa, DSAPrivateKey privateKey,SecureRandom secureRandom) throws InvalidKeyException, IOException, SignatureException {
-        filepath = "src/com/pratik/Data/"+filepath;
+        filepath = "./com/pratik/Data/"+filepath;
         InputStream inputstream = new FileInputStream(filepath);
         //int size = inputstream.available();
 
@@ -537,7 +540,7 @@ public class Main {
     }
 
     public static boolean dsa_verify(String filepath,byte[] digitalSignature,Signature dsa,DSAPublicKey publicKey) throws InvalidKeyException, SignatureException, IOException {
-        filepath = "src/com/pratik/Data/"+filepath;
+        filepath = "./com/pratik/Data/"+filepath;
         InputStream inputstream = new FileInputStream(filepath);
 
         dsa.initVerify(publicKey);

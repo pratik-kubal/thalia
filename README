@@ -1,0 +1,4 @@
+To Compile basic code(From outside the Directory):
+
+javac -cp ":./com/pratik/bcprov-ext-jdk15on-160.jar:./com/pratik/bcpkix-jdk15on-160.jar:./com/pratik/:" com/pratik/Main.java
+java -cp ":./com/pratik/bcprov-ext-jdk15on-160.jar:./com/pratik/bcpkix-jdk15on-160.jar:./com/pratik/:" com.pratik.Main
