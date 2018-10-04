@@ -147,30 +147,44 @@ public class Main {
     }
 
     public static SecretKey genAES128(int keySize) throws  NoSuchAlgorithmException{
+        long startTime= System.nanoTime();
         KeyGenerator aesCBCKeyInstance = KeyGenerator.getInstance("AES");
         SecureRandom random_key = new SecureRandom();
         aesCBCKeyInstance.init(keySize,random_key);
         SecretKey aesCBCKey = aesCBCKeyInstance.generateKey();
+        long endTime = System.nanoTime();
 
+        long duration = (endTime - startTime);
+        System.out.println("Time Taken to Generate Key of length "+keySize+" is: "+duration+" nanoseconds");
         return aesCBCKey;
 
     }
 
     public static KeyPair genSymmetricKey(int keySize,String scheme) throws NoSuchAlgorithmException {
+        long startTime= System.nanoTime();
         KeyPairGenerator key = KeyPairGenerator.getInstance(scheme);
         SecureRandom random_key = new SecureRandom();
         key.initialize(keySize,random_key);
         KeyPair keyPair = key.generateKeyPair();
+        long endTime = System.nanoTime();
+
+        long duration = (endTime - startTime);
+        System.out.println("Time Taken to Generate "+scheme+" Key of length "+keySize+" is: "+duration+" nanoseconds");
         return keyPair;
 
     }
 
     public static IvParameterSpec genIV(Cipher instance) throws NoSuchAlgorithmException {
+        long startTime= System.nanoTime();
         SecureRandom randomSecureRandom = SecureRandom.getInstance("SHA1PRNG");
         byte[] iv_initial_counter = new byte[instance.getBlockSize()];
         randomSecureRandom.nextBytes(iv_initial_counter);
 
         IvParameterSpec ivParams = new IvParameterSpec(iv_initial_counter);
+        long endTime = System.nanoTime();
+
+        long duration = (endTime - startTime);
+        System.out.println("Time Taken to Generate IV: "+duration+" nanoseconds");
         return ivParams;
     }
 
