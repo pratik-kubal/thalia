@@ -255,168 +255,216 @@ public class Main {
     public static void encrypt_AES_CBC(String filepath,Cipher instance,SecretKey aesCBCKey,IvParameterSpec iv) throws InvalidKeyException, IOException, BadPaddingException, IllegalBlockSizeException, InvalidAlgorithmParameterException {
         Security.addProvider(new BouncyCastleProvider());
         //File path
+        String filename = filepath;
         Cipher aesCBC = instance;
-        IvParameterSpec ivspec = iv;
-        String outputPath = "./com/pratik/Data/AES_CBC_"+aesCBCKey.getEncoded().length*8+"_EN-"+filepath;
-        OutputStream outputstream = new FileOutputStream(outputPath);
+        String outputPath = null;
+        outputPath = "./com/pratik/Data/AES_CBC_"+aesCBCKey.getEncoded().length*8+"_EN-"+filepath;
+
         filepath = "./com/pratik/Data/"+filepath;
-        InputStream inputstream = new FileInputStream(filepath);
-        int size = inputstream.available();
 
-        byte[] data      = new byte[16];
-        int bytesRead = inputstream.read(data,0,16);
-        //int i = 1;
-
-
-        // Init the algorithm
-        aesCBC.init(Cipher.ENCRYPT_MODE, aesCBCKey,ivspec);
-        // First Encryption
         long startTime=0,stopTime=0,resultTime=0;
-        startTime =System.nanoTime();
-        byte[] result = aesCBC.update(data);
-        outputstream.write(result);
+        for (int i=0;i<50000;i++){
+            OutputStream outputstream = new FileOutputStream(outputPath);
+            InputStream inputstream = new FileInputStream(filepath);
+            IvParameterSpec ivspec = iv;
 
-        while(bytesRead != -1){
-            bytesRead = inputstream.read(data,0,16);
-            //System.out.println(inputstream.available());
-            if(bytesRead != -1){
-                if(inputstream.available() > 0){
-                    result = aesCBC.update(data);
-                }else if(inputstream.available() == 0){
-                    result = aesCBC.doFinal(data);
+            int size = inputstream.available();
+
+            byte[] data      = new byte[16];
+            int bytesRead = inputstream.read(data,0,16);
+            //int i = 1;
+
+
+            // Init the algorithm
+            aesCBC.init(Cipher.ENCRYPT_MODE, aesCBCKey,ivspec);
+            // First Encryption
+
+
+            startTime =System.nanoTime();
+            byte[] result = aesCBC.update(data);
+            outputstream.write(result);
+
+            while(bytesRead != -1){
+                bytesRead = inputstream.read(data,0,16);
+                //System.out.println(inputstream.available());
+                if(bytesRead != -1){
+                    if(inputstream.available() > 0){
+                        result = aesCBC.update(data);
+                    }else if(inputstream.available() == 0){
+                        result = aesCBC.doFinal(data);
+                    }
+                    outputstream.write(result);
+                    stopTime = System.nanoTime();
                 }
-                outputstream.write(result);
-                stopTime = System.nanoTime();
             }
+
+            // File Handling maintenance
+            outputstream.flush();
+            outputstream.close();
+            inputstream.close();
         }
+
         resultTime= stopTime-startTime;
-        // File Handling maintenance
-        outputstream.flush();
-        outputstream.close();
-        inputstream.close();
         System.out.println("Time Taken is:"+resultTime);
+        if(filename.equals("file-small.bin")){
+            System.out.println("Speed Per Byte(nanoseconds/Byte):"+resultTime/1024);
+        }else if(filename.equals("file-large.bin")){
+            System.out.println("Speed Per Byte(nanoseconds/Byte):"+resultTime/1048576);
+        }
         System.out.println("CBC Encryption as:"+outputPath);
     }
 
     public static void decrypt_AES_CBC(String filename,Cipher instance,SecretKey aesCBCKey,IvParameterSpec iv)  throws InvalidKeyException, IOException, BadPaddingException, IllegalBlockSizeException, InvalidAlgorithmParameterException {
         Cipher aesCBC = instance;
         IvParameterSpec ivspec = iv;
-        InputStream DECinputstream = new FileInputStream("./com/pratik/Data/AES_CBC_"+aesCBCKey.getEncoded().length*8+"_EN-"+filename);
-        OutputStream DECoutputstream = new FileOutputStream("./com/pratik/Data/AES_CBC_"+aesCBCKey.getEncoded().length*8+"_DEC-"+filename);
-
-        int size = DECinputstream.available();
-        //System.out.println(size);
-        byte[] data      = new byte[16];
-        int bytesRead = DECinputstream.read(data,0,16);
-        aesCBC.init(Cipher.DECRYPT_MODE, aesCBCKey,ivspec);
-
-        // First Encryption
         long startTime=0,stopTime=0,resultTime=0;
-        startTime =System.nanoTime();
-        byte[] result = aesCBC.update(data);
-        DECoutputstream.write(result);
+        String in = "./com/pratik/Data/AES_CBC_"+aesCBCKey.getEncoded().length*8+"_EN-"+filename;
+        String out = "./com/pratik/Data/AES_CBC_"+aesCBCKey.getEncoded().length*8+"_DEC-"+filename;
 
-        while(bytesRead != -1){
-            bytesRead = DECinputstream.read(data,0,16);
-            //System.out.println(DECinputstream.available());
-            if(bytesRead != -1){
-                if(DECinputstream.available() > 0){
-                    result = aesCBC.update(data);
-                }else if(DECinputstream.available() == 0){
-                    //System.out.println("final");
-                    result = aesCBC.doFinal(data);
+
+        for(int i =0;i<50000;i++){
+            InputStream DECinputstream = new FileInputStream(in);
+            OutputStream DECoutputstream = new FileOutputStream(out);
+            int size = DECinputstream.available();
+            //System.out.println(size);
+            byte[] data      = new byte[16];
+            int bytesRead = DECinputstream.read(data,0,16);
+            aesCBC.init(Cipher.DECRYPT_MODE, aesCBCKey,ivspec);
+
+            // First Encryption
+
+            startTime =System.nanoTime();
+            byte[] result = aesCBC.update(data);
+            DECoutputstream.write(result);
+
+            while(bytesRead != -1){
+                bytesRead = DECinputstream.read(data,0,16);
+                //System.out.println(DECinputstream.available());
+                if(bytesRead != -1){
+                    if(DECinputstream.available() > 0){
+                        result = aesCBC.update(data);
+                    }else if(DECinputstream.available() == 0){
+                        //System.out.println("final");
+                        result = aesCBC.doFinal(data);
+                    }
+                    DECoutputstream.write(result);
+                    stopTime = System.nanoTime();
                 }
-                DECoutputstream.write(result);
-                stopTime = System.nanoTime();
             }
+            // File Handling maintenance
+            DECoutputstream.flush();
+            DECoutputstream.close();
+            DECinputstream.close();
         }
         resultTime= stopTime-startTime;
-        // File Handling maintenance
-        DECoutputstream.flush();
-        DECoutputstream.close();
-        DECinputstream.close();
         System.out.println("Time Taken is:"+resultTime);
+        if(filename.equals("file-small.bin")){
+            System.out.println("Speed Per Byte(nanoseconds/Byte):"+resultTime/1024);
+        }else if(filename.equals("file-large.bin")){
+            System.out.println("Speed Per Byte(nanoseconds/Byte):"+resultTime/1048576);
+        }
         System.out.println("CBC Decryption as:"+"./com/pratik/Data/AES_CBC_"+aesCBCKey.getEncoded().length*8+"_DEC-"+filename);
     }
 
     public static  void encrypt_AES_CTR(String filepath,Cipher instance,SecretKey aesKey,IvParameterSpec iv) throws IOException, InvalidKeyException, BadPaddingException, IllegalBlockSizeException, InvalidAlgorithmParameterException {
         //File path
-        String outputPath = "./com/pratik/Data/AES_CTR_"+aesKey.getEncoded().length*8+"_EN-"+filepath;
-        OutputStream outputstream = new FileOutputStream(outputPath);
-        filepath = "./com/pratik/Data/"+filepath;
-        InputStream inputstream = new FileInputStream(filepath);
-        int size = inputstream.available();
-
-        byte[] data      = new byte[16];
-        int bytesRead = inputstream.read(data,0,16);
-        // Init the algorithm
-        instance.init(Cipher.ENCRYPT_MODE, aesKey,iv);
-        // First Encryption
+        String filename = filepath;
         long startTime=0,stopTime=0,resultTime=0;
-        startTime =System.nanoTime();
-        byte[] result = instance.update(data);
-        outputstream.write(result);
+        String outputPath = "./com/pratik/Data/AES_CTR_"+aesKey.getEncoded().length*8+"_EN-"+filepath;
 
-        while(bytesRead != -1){
-            bytesRead = inputstream.read(data,0,16);
-            //System.out.println(inputstream.available());
-            if(bytesRead != -1){
-                if(inputstream.available() > 0){
-                    result = instance.update(data);
-                }else if(inputstream.available() == 0){
-                    result = instance.doFinal(data);
+        filepath = "./com/pratik/Data/"+filepath;
+
+        for (int i =0;i<1000;i++){
+            OutputStream outputstream = new FileOutputStream(outputPath);
+            InputStream inputstream = new FileInputStream(filepath);
+            byte[] data      = new byte[16];
+            int bytesRead = inputstream.read(data,0,16);
+            // Init the algorithm
+            instance.init(Cipher.ENCRYPT_MODE, aesKey,iv);
+            // First Encryption
+
+            startTime =System.nanoTime();
+            byte[] result = instance.update(data);
+            outputstream.write(result);
+
+            while(bytesRead != -1){
+                bytesRead = inputstream.read(data,0,16);
+                //System.out.println(inputstream.available());
+                if(bytesRead != -1){
+                    if(inputstream.available() > 0){
+                        result = instance.update(data);
+                    }else if(inputstream.available() == 0){
+                        result = instance.doFinal(data);
+                    }
+                    outputstream.write(result);
+                    stopTime = System.nanoTime();
                 }
-                outputstream.write(result);
-                stopTime = System.nanoTime();
             }
+
+            // File Handling maintenance
+            outputstream.flush();
+            outputstream.close();
+            inputstream.close();
         }
         resultTime= stopTime-startTime;
-        // File Handling maintenance
-        outputstream.flush();
-        outputstream.close();
-        inputstream.close();
         System.out.println("Time Taken is:"+resultTime);
+        if(filename.equals("file-small.bin")){
+            System.out.println("Speed Per Byte(nanoseconds/Byte):"+resultTime/1024);
+        }else if(filename.equals("file-large.bin")){
+            System.out.println("Speed Per Byte(nanoseconds/Byte):"+resultTime/1048576);
+        }
         System.out.println("CTR Encryption as:"+outputPath);
     }
 
     public static void decrypt_AES_CTR(String filepath,Cipher instance,SecretKey aesKey,IvParameterSpec iv) throws IOException, InvalidKeyException, BadPaddingException, IllegalBlockSizeException, InvalidAlgorithmParameterException{
-        InputStream DECinputstream = new FileInputStream("./com/pratik/Data/AES_CTR_"+aesKey.getEncoded().length*8+"_EN-"+filepath);
-        OutputStream DECoutputstream = new FileOutputStream("./com/pratik/Data/AES_CTR_"+aesKey.getEncoded().length*8+"_DEC-"+filepath);
-
-        //int size = DECinputstream.available();
-        //System.out.println(size);
-        byte[] data      = new byte[16];
-        int bytesRead = DECinputstream.read(data,0,16);
-
-        // Init the algorithm
-        instance.init(Cipher.DECRYPT_MODE, aesKey,iv);
-
-        // First Encryption
+        String filename = filepath;
         long startTime=0,stopTime=0,resultTime=0;
-        startTime =System.nanoTime();
-        byte[] result = instance.update(data);
-        DECoutputstream.write(result);
+        String in = "./com/pratik/Data/AES_CTR_"+aesKey.getEncoded().length*8+"_EN-"+filepath;
+        String out = "./com/pratik/Data/AES_CTR_"+aesKey.getEncoded().length*8+"_DEC-"+filepath;
+        for (int i =0;i<1000;i++){
+            InputStream DECinputstream = new FileInputStream(in);
+            OutputStream DECoutputstream = new FileOutputStream(out);
+            //int size = DECinputstream.available();
+            //System.out.println(size);
+            byte[] data      = new byte[16];
+            int bytesRead = DECinputstream.read(data,0,16);
 
-        while(bytesRead != -1){
-            bytesRead = DECinputstream.read(data,0,16);
-            //System.out.println(DECinputstream.available());
-            if(bytesRead != -1){
-                if(DECinputstream.available() > 0){
-                    result = instance.update(data);
-                }else if(DECinputstream.available() == 0){
-                    //System.out.println("final");
-                    result = instance.doFinal(data);
+            // Init the algorithm
+            instance.init(Cipher.DECRYPT_MODE, aesKey,iv);
+
+            // First Encryption
+
+            startTime =System.nanoTime();
+            byte[] result = instance.update(data);
+            DECoutputstream.write(result);
+
+            while(bytesRead != -1){
+                bytesRead = DECinputstream.read(data,0,16);
+                //System.out.println(DECinputstream.available());
+                if(bytesRead != -1){
+                    if(DECinputstream.available() > 0){
+                        result = instance.update(data);
+                    }else if(DECinputstream.available() == 0){
+                        //System.out.println("final");
+                        result = instance.doFinal(data);
+                    }
+                    DECoutputstream.write(result);
+                    stopTime = System.nanoTime();
                 }
-                DECoutputstream.write(result);
-                stopTime = System.nanoTime();
             }
+
+            // File Handling maintenance
+            DECoutputstream.flush();
+            DECoutputstream.close();
+            DECinputstream.close();
         }
         resultTime= stopTime-startTime;
-        // File Handling maintenance
-        DECoutputstream.flush();
-        DECoutputstream.close();
-        DECinputstream.close();
         System.out.println("Time Taken is:"+resultTime);
+        if(filename.equals("file-small.bin")){
+            System.out.println("Speed Per Byte(nanoseconds/Byte):"+resultTime/1024);
+        }else if(filename.equals("file-large.bin")){
+            System.out.println("Speed Per Byte(nanoseconds/Byte):"+resultTime/1048576);
+        }
         System.out.println("CTR Decryption as:"+"./com/pratik/Data/AES_CTR_"+aesKey.getEncoded().length*8+"_DEC-file-small.bin");
     }
 
