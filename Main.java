@@ -66,14 +66,14 @@ public class Main {
         IvParameterSpec ctrIv256 = genIV(aesCBC);
         // Encrypt file
         System.out.println();
-        System.out.println("CTR 128 Small File");
+        System.out.println("CTR 256 Small File");
         System.out.println();
         System.out.println("Encrypt");
         encrypt_AES_CTR("file-small.bin",aesCTR,aes256,ctrIv256);
         System.out.println("Decrypt");
         decrypt_AES_CTR("file-small.bin",aesCTR,aes256,ctrIv256);
         System.out.println();
-        System.out.println("CTR 128 Large File");
+        System.out.println("CTR 256 Large File");
         // Decrypt File
         System.out.println("Encrypt");
         encrypt_AES_CTR("file-large.bin",aesCTR,aes256,ctrIv256);
@@ -158,7 +158,8 @@ public class Main {
         SecureRandom secureRandom2048 = new SecureRandom();
         System.out.println("Time Taken and Digital Signature of small file:");
         System.out.println();
-        byte[] dsa_byte = dsa_sign("file-small.bin",dsa,dsaprivateKey,secureRandom2048);
+        byte[] dsa_byte;
+        dsa_byte = dsa_sign("file-small.bin",dsa,dsaprivateKey,secureRandom2048);
         printHex(dsa_byte);
         System.out.println();
         System.out.println("Time Taken and Digital Signature verification:");
@@ -167,7 +168,8 @@ public class Main {
 
         System.out.println("Time Taken and Digital Signature of large file:");
         System.out.println();
-        dsa_byte = dsa_sign("file-large.bin",dsa,dsaprivateKey,secureRandom2048);
+        SecureRandom secureRandom2048_2 = new SecureRandom();
+        dsa_byte = dsa_sign("file-large.bin",dsa,dsaprivateKey,secureRandom2048_2);
         printHex(dsa_byte);
         System.out.println();
         System.out.println("Time Taken and Digital Signature verification:");
@@ -184,25 +186,26 @@ public class Main {
         DSAPublicKey dsapublicKey3072 = (DSAPublicKey) dsakeyPair3072.getPublic();
         DSAPrivateKey dsaprivateKey3072 = (DSAPrivateKey) dsakeyPair3072.getPrivate();
 
-        SecureRandom secureRandom3072 = new SecureRandom();
+        SecureRandom secureRandom3072_2 = new SecureRandom();
         System.out.println("Time Taken and Digital Signature of small file:");
         System.out.println();
-        dsa_byte = dsa_sign("file-small.bin",dsa,dsaprivateKey3072,secureRandom3072);
-        printHex(dsa_byte);
+        dsa_byte = dsa_sign("file-small.bin",dsa,dsaprivateKey3072,secureRandom3072_2);
+        System.out.println("Time Taken and Digital Signature of small file:");
         System.out.println();
+        dsa_byte = dsa_sign("file-small.bin",dsa,dsaprivateKey3072,secureRandom3072_2);
+        printHex(dsa_byte);
         System.out.println("Time Taken and Digital Signature verification:");
         System.out.println();
         System.out.println(dsa_verify("file-small.bin",dsa_byte,dsa,dsapublicKey3072));
-
+        System.out.println();
         System.out.println("Time Taken and Digital Signature of large file:");
         System.out.println();
-        dsa_byte = dsa_sign("file-large.bin",dsa,dsaprivateKey3072,secureRandom3072);
+        dsa_byte = dsa_sign("file-large.bin",dsa,dsaprivateKey3072,secureRandom3072_2);
         printHex(dsa_byte);
         System.out.println();
         System.out.println("Time Taken and Digital Signature verification:");
         System.out.println();
         System.out.println(dsa_verify("file-large.bin",dsa_byte,dsa,dsapublicKey3072));
-
         System.out.println("Time Taken and Opposite Files verification check:");
         System.out.println();
         System.out.println(dsa_verify("file-small.bin",dsa_byte,dsa,dsapublicKey3072));
@@ -258,12 +261,16 @@ public class Main {
         String filename = filepath;
         Cipher aesCBC = instance;
         String outputPath = null;
+        int looptime=5;
         outputPath = "./com/pratik/Data/AES_CBC_"+aesCBCKey.getEncoded().length*8+"_EN-"+filepath;
 
         filepath = "./com/pratik/Data/"+filepath;
 
+        if(filename.equals("file-small.bin")){
+            looptime = 10000;
+        }
         long startTime=0,stopTime=0,resultTime=0;
-        for (int i=0;i<50000;i++){
+        for (int i=0;i<looptime;i++){
             OutputStream outputstream = new FileOutputStream(outputPath);
             InputStream inputstream = new FileInputStream(filepath);
             IvParameterSpec ivspec = iv;
@@ -320,9 +327,12 @@ public class Main {
         long startTime=0,stopTime=0,resultTime=0;
         String in = "./com/pratik/Data/AES_CBC_"+aesCBCKey.getEncoded().length*8+"_EN-"+filename;
         String out = "./com/pratik/Data/AES_CBC_"+aesCBCKey.getEncoded().length*8+"_DEC-"+filename;
+        int looptime = 5;
+        if(filename.equals("file-small.bin")){
+            looptime = 10000;
+        }
 
-
-        for(int i =0;i<50000;i++){
+        for(int i =0;i<looptime;i++){
             InputStream DECinputstream = new FileInputStream(in);
             OutputStream DECoutputstream = new FileOutputStream(out);
             int size = DECinputstream.available();
@@ -373,8 +383,11 @@ public class Main {
         String outputPath = "./com/pratik/Data/AES_CTR_"+aesKey.getEncoded().length*8+"_EN-"+filepath;
 
         filepath = "./com/pratik/Data/"+filepath;
-
-        for (int i =0;i<1000;i++){
+        int looptime = 5;
+        if(filename.equals("file-small.bin")){
+            looptime = 10000;
+        }
+        for (int i =0;i<looptime;i++){
             OutputStream outputstream = new FileOutputStream(outputPath);
             InputStream inputstream = new FileInputStream(filepath);
             byte[] data      = new byte[16];
@@ -421,7 +434,11 @@ public class Main {
         long startTime=0,stopTime=0,resultTime=0;
         String in = "./com/pratik/Data/AES_CTR_"+aesKey.getEncoded().length*8+"_EN-"+filepath;
         String out = "./com/pratik/Data/AES_CTR_"+aesKey.getEncoded().length*8+"_DEC-"+filepath;
-        for (int i =0;i<1000;i++){
+        int looptime = 5;
+        if(filename.equals("file-small.bin")){
+            looptime = 10000;
+        }
+        for (int i =0;i<looptime;i++){
             InputStream DECinputstream = new FileInputStream(in);
             OutputStream DECoutputstream = new FileOutputStream(out);
             //int size = DECinputstream.available();
@@ -480,116 +497,160 @@ public class Main {
 
     public static byte[] hash_256(String filepath) throws NoSuchAlgorithmException, IOException {
         //File path
-        filepath = "./com/pratik/Data/"+filepath;
-        InputStream inputstream = new FileInputStream(filepath);
-
-        MessageDigest messeagedigest = MessageDigest.getInstance("SHA-256");
-
-        byte[] data      = new byte[64];
+        String filename = filepath;
         long startTime=0,stopTime=0,resultTime=0;
-        startTime =System.nanoTime();
-        int bytesRead = inputstream.read(data,0,64);
-        // First Encryption
-        messeagedigest.update(data);
-        //outputstream.write(result);
+        filepath = "./com/pratik/Data/"+filepath;
+        byte[] result = null;
+        int looptime = 5;
+        if(filename.equals("file-small.bin")){
+            looptime = 10000;
+        }
+        for(int i = 0;i<looptime;i++){
+            InputStream inputstream = new FileInputStream(filepath);
 
-        while(bytesRead != -1){
-            bytesRead = inputstream.read(data,0,64);
-            //System.out.println(inputstream.available());
-            if(bytesRead != -1){
-                if(inputstream.available() > 0){
-                    messeagedigest.update(data);
-                }else if(inputstream.available() == 0){
-                    messeagedigest.update(data);
+            MessageDigest messeagedigest = MessageDigest.getInstance("SHA-256");
+
+            byte[] data      = new byte[64];
+
+            startTime =System.nanoTime();
+            int bytesRead = inputstream.read(data,0,64);
+            // First Encryption
+            messeagedigest.update(data);
+            //outputstream.write(result);
+
+            while(bytesRead != -1){
+                bytesRead = inputstream.read(data,0,64);
+                //System.out.println(inputstream.available());
+                if(bytesRead != -1){
+                    if(inputstream.available() > 0){
+                        messeagedigest.update(data);
+                    }else if(inputstream.available() == 0){
+                        messeagedigest.update(data);
+                    }
                 }
             }
+            result = messeagedigest.digest();
+            stopTime = System.nanoTime();
+            // File Handling maintenance
+            inputstream.close();
         }
-        byte[] result = messeagedigest.digest();
-        stopTime = System.nanoTime();
         resultTime= stopTime-startTime;
-        // File Handling maintenance
-        inputstream.close();
         System.out.println("Time Taken is:"+resultTime);
+        if(filename.equals("file-small.bin")){
+            System.out.println("Speed Per Byte(nanoseconds/Byte):"+resultTime/1024);
+        }else if(filename.equals("file-large.bin")){
+            System.out.println("Speed Per Byte(nanoseconds/Byte):"+resultTime/1048576);
+        }
         return result;
     }
 
     public static byte[] hash_512(String filepath) throws NoSuchAlgorithmException, IOException {
         //File path
-        filepath = "./com/pratik/Data/"+filepath;
-        InputStream inputstream = new FileInputStream(filepath);
-
-        MessageDigest messeagedigest = MessageDigest.getInstance("SHA-512");
-
-        byte[] data      = new byte[128];
-        int bytesRead = inputstream.read(data,0,128);
-        // First Encryption
+        String filename = filepath;
+        byte[] result = null;
         long startTime=0,stopTime=0,resultTime=0;
-        startTime =System.nanoTime();
-        messeagedigest.update(data);
-        //outputstream.write(result);
+        filepath = "./com/pratik/Data/"+filepath;
 
-        while(bytesRead != -1){
-            bytesRead = inputstream.read(data,0,128);
-            //System.out.println(inputstream.available());
-            if(bytesRead != -1){
-                if(inputstream.available() > 0){
-                    messeagedigest.update(data);
-                }else if(inputstream.available() == 0){
-                    messeagedigest.update(data);
+        int looptime = 5;
+        if(filename.equals("file-small.bin")){
+            looptime = 10000;
+        }
+        for(int i = 0;i<looptime;i++){
+            InputStream inputstream = new FileInputStream(filepath);
+            MessageDigest messeagedigest = MessageDigest.getInstance("SHA-512");
+
+            byte[] data      = new byte[128];
+            int bytesRead = inputstream.read(data,0,128);
+            // First Encryption
+
+            startTime =System.nanoTime();
+            messeagedigest.update(data);
+            //outputstream.write(result);
+
+            while(bytesRead != -1){
+                bytesRead = inputstream.read(data,0,128);
+                //System.out.println(inputstream.available());
+                if(bytesRead != -1){
+                    if(inputstream.available() > 0){
+                        messeagedigest.update(data);
+                    }else if(inputstream.available() == 0){
+                        messeagedigest.update(data);
+                    }
                 }
             }
+            result = messeagedigest.digest();
+            stopTime = System.nanoTime();
+
+            // File Handling maintenance
+            inputstream.close();
         }
-        byte[] result = messeagedigest.digest();
-        stopTime = System.nanoTime();
         resultTime= stopTime-startTime;
-        // File Handling maintenance
-        inputstream.close();
         System.out.println("Time Taken is:"+resultTime);
+        if(filename.equals("file-small.bin")){
+            System.out.println("Speed Per Byte(nanoseconds/Byte):"+resultTime/1024);
+        }else if(filename.equals("file-large.bin")){
+            System.out.println("Speed Per Byte(nanoseconds/Byte):"+resultTime/1048576);
+        }
         return result;
     }
 
     public static byte[] hash_sha3256(String filepath) throws IOException {
         //File path
-        filepath = "./com/pratik/Data/"+filepath;
-        InputStream inputstream = new FileInputStream(filepath);
-        int size = inputstream.available();
-        SHA3.DigestSHA3 messagedigest = new SHA3.Digest256();
-        byte[] data      = new byte[136];
+        String filename = filepath;
         long startTime=0,stopTime=0,resultTime=0;
-        startTime =System.nanoTime();
-        int bytesRead = inputstream.read(data,0,136);
-        // First Encryption
+        filepath = "./com/pratik/Data/"+filepath;
 
-        messagedigest.update(data);
-        //outputstream.write(result);
-        while(bytesRead != -1){
-            //System.out.println(inputstream.available());
-            if(bytesRead != -1){
-                if(inputstream.available() > 136){
-                    bytesRead = inputstream.read(data,0,136);
-                    messagedigest.update(data);
-                }else{
-                    byte[] lastData = new byte[inputstream.available()];
-                    bytesRead = inputstream.read(lastData);
-                    messagedigest.update(lastData);
-                    bytesRead = -1;
+        byte[] result = null;
+        int looptime = 5;
+        if(filename.equals("file-small.bin")){
+            looptime = 10000;
+        }
+        for(int i =0;i<looptime;i++){
+            InputStream inputstream = new FileInputStream(filepath);
+            SHA3.DigestSHA3 messagedigest = new SHA3.Digest256();
+            byte[] data      = new byte[136];
+
+            startTime =System.nanoTime();
+            int bytesRead = inputstream.read(data,0,136);
+            // First Encryption
+
+            messagedigest.update(data);
+            //outputstream.write(result);
+            while(bytesRead != -1){
+                //System.out.println(inputstream.available());
+                if(bytesRead != -1){
+                    if(inputstream.available() > 136){
+                        bytesRead = inputstream.read(data,0,136);
+                        messagedigest.update(data);
+                    }else{
+                        byte[] lastData = new byte[inputstream.available()];
+                        bytesRead = inputstream.read(lastData);
+                        messagedigest.update(lastData);
+                        bytesRead = -1;
+                    }
                 }
             }
+            //System.out.println();
+            //printHex(data);
+            result = messagedigest.digest();
+            stopTime = System.nanoTime();
+            // File Handling maintenance
+            inputstream.close();
         }
-        //System.out.println();
-        //printHex(data);
-        byte[] result = messagedigest.digest();
-        stopTime = System.nanoTime();
-        // File Handling maintenance
-        inputstream.close();
         resultTime= stopTime-startTime;
         System.out.println("Time Taken is:"+resultTime);
+        if(filename.equals("file-small.bin")){
+            System.out.println("Speed Per Byte(nanoseconds/Byte):"+resultTime/1024);
+        }else if(filename.equals("file-large.bin")){
+            System.out.println("Speed Per Byte(nanoseconds/Byte):"+resultTime/1048576);
+        }
         return result;
 
     }
 
     public static void encrypt_rsa(String filepath,Cipher rsa,RSAPublicKey publicKey,int keySize) throws IOException, InvalidKeyException, BadPaddingException, IllegalBlockSizeException {
         //File path
+        String filename = filepath;
         String outputPath = "./com/pratik/Data/RSA_EN_"+keySize+"-"+filepath;
         OutputStream outputstream = new FileOutputStream(outputPath);
         filepath = "./com/pratik/Data/"+filepath;
@@ -631,12 +692,18 @@ public class Main {
         outputstream.close();
         resultTime= stopTime-startTime;
         System.out.println("Time Taken is:"+resultTime);
+        if(filename.equals("file-small.bin")){
+            System.out.println("Speed Per Byte(nanoseconds/Byte):"+resultTime/1024);
+        }else if(filename.equals("file-large.bin")){
+            System.out.println("Speed Per Byte(nanoseconds/Byte):"+resultTime/1048576);
+        }
         System.out.println("Encrypted as:"+outputPath);
     }
 
     public static void decrypt_rsa(String filepath,Cipher rsa,RSAPrivateKey privateKey,int keySize) throws InvalidKeyException, IOException, BadPaddingException, IllegalBlockSizeException, InvalidAlgorithmParameterException, NoSuchPaddingException, NoSuchAlgorithmException {
         // Solving Error of Padding:https://stackoverflow.com/questions/32161720/breaking-down-rsa-ecb-oaepwithsha-256andmgf1padding
         //File path
+        String filename = filepath;
         String inpath = "./com/pratik/Data/RSA_EN_"+keySize+"-"+filepath;
         InputStream inputstream = new FileInputStream(inpath);
         filepath = "./com/pratik/Data/RSA_DEC_"+keySize+"-"+filepath;
@@ -684,43 +751,91 @@ public class Main {
         outputstream.close();
         resultTime= stopTime-startTime;
         System.out.println("Time Taken is:"+resultTime);
+        if(filename.equals("file-small.bin")){
+            System.out.println("Speed Per Byte(nanoseconds/Byte):"+resultTime/1024);
+        }else if(filename.equals("file-large.bin")){
+            System.out.println("Speed Per Byte(nanoseconds/Byte):"+resultTime/1048576);
+        }
         System.out.println("Decrypted as:"+filepath);
     }
 
     public static byte[] dsa_sign(String filepath, Signature dsa, DSAPrivateKey privateKey,SecureRandom secureRandom) throws InvalidKeyException, IOException, SignatureException {
-        filepath = "./com/pratik/Data/"+filepath;
-        InputStream inputstream = new FileInputStream(filepath);
-        //int size = inputstream.available();
-
-        dsa.initSign(privateKey,secureRandom);
-
-        byte[] data      = new byte[inputstream.available()];
+        String filename = filepath;
         long startTime=0,stopTime=0,resultTime=0;
-        startTime =System.nanoTime();
-        dsa.update(data);
+        byte[] result = null;
+        int bytesRead=0;
+        filepath = "./com/pratik/Data/"+filepath;
+        //int size = inputstream.available();
+        int looptime = 5;
+        if(filename.equals("file-small.bin")){
+            looptime = 5;
+        }
 
-        byte[] result = dsa.sign();
-        stopTime = System.nanoTime();
-        // File Handling maintenance
-        inputstream.close();
+        for(int i = 0;i<looptime;i++){
+            InputStream inputstream = new FileInputStream(filepath);
+            dsa.initSign(privateKey,secureRandom);
+            //System.out.println(inputstream.available());
+            byte[] data      = new byte[64];
+            bytesRead = inputstream.read(data,0,64);
+            startTime = System.nanoTime();
+            dsa.update(data);
+
+            while(bytesRead != -1){
+                //System.out.println(inputstream.available());
+                if(bytesRead != -1){
+                    if(inputstream.available() > 64){
+                        bytesRead = inputstream.read(data,0,64);
+                        dsa.update(data);
+                    }else {
+                        byte[] lastData = new byte[inputstream.available()];
+                        bytesRead = inputstream.read(lastData);
+                        dsa.update(lastData);
+                        bytesRead = -1;
+                    }
+                }
+            }
+            result = dsa.sign();
+            stopTime = System.nanoTime();
+            // File Handling maintenance
+            inputstream.close();
+        }
         resultTime= stopTime-startTime;
         System.out.println("Time Taken is:"+resultTime);
+        if(filename.equals("file-small.bin")){
+            System.out.println("Speed Per Byte(nanoseconds/Byte):"+resultTime/1024);
+        }else if(filename.equals("file-large.bin")){
+            System.out.println("Speed Per Byte(nanoseconds/Byte):"+resultTime/1048576);
+        }
         return result;
     }
 
     public static boolean dsa_verify(String filepath,byte[] digitalSignature,Signature dsa,DSAPublicKey publicKey) throws InvalidKeyException, SignatureException, IOException {
-        filepath = "./com/pratik/Data/"+filepath;
-        InputStream inputstream = new FileInputStream(filepath);
-
-        dsa.initVerify(publicKey);
-
-        byte[] data      = new byte[inputstream.available()];
+        String filename = filepath;
         long startTime=0,stopTime=0,resultTime=0;
-        startTime =System.nanoTime();
-        dsa.update(data);
-        stopTime = System.nanoTime();
+        filepath = "./com/pratik/Data/"+filepath;
+
+        int looptime = 5;
+        if(filename.equals("file-small.bin")){
+            looptime = 5;
+        }
+        for(int i = 0; i<looptime;i++){
+            startTime =System.nanoTime();
+            InputStream inputstream = new FileInputStream(filepath);
+            dsa.initVerify(publicKey);
+
+            byte[] data      = new byte[inputstream.available()];
+            inputstream.read(data,0,inputstream.available());
+            dsa.update(data);
+            stopTime = System.nanoTime();
+
+        }
         resultTime= stopTime-startTime;
         System.out.println("Time Taken is:"+resultTime);
+        if(filename.equals("file-small.bin")){
+            System.out.println("Speed Per Byte(nanoseconds/Byte):"+resultTime/1024);
+        }else if(filename.equals("file-large.bin")){
+            System.out.println("Speed Per Byte(nanoseconds/Byte):"+resultTime/1048576);
+        }
         return dsa.verify(digitalSignature);
     }
 }
