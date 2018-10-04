@@ -21,139 +21,205 @@ public class Main {
         // Make Instance of the algorithm
         Cipher aesCBC = Cipher. getInstance("AES/CBC/NoPadding");
         // Generate Key
-        SecretKey aes128 = genAES128(128);
+        SecretKey aes128cbc = genAES128(128);
         IvParameterSpec iv = genIV(aesCBC);
-        // Encrypt file
-        encrypt_AES_CBC("file-small.bin",aesCBC,aes128,iv);
-        encrypt_AES_CBC("file-large.bin",aesCBC,aes128,iv);
-        // Decrypt File
-        decrypt_AES_CBC("file-small.bin",aesCBC,aes128,iv);
-        decrypt_AES_CBC("file-large.bin",aesCBC,aes128,iv);
+        System.out.println();
+        System.out.println("AES 128 Small File:");
+        System.out.println("Encrypt");
+        encrypt_AES_CBC("file-small.bin",aesCBC,aes128cbc,iv);
+        System.out.println("Decrypt");
+        decrypt_AES_CBC("file-small.bin",aesCBC,aes128cbc,iv);
+        System.out.println();
+        System.out.println("AES 128 Large File");
+        System.out.println("Encrypt");
+        encrypt_AES_CBC("file-large.bin",aesCBC,aes128cbc,iv);
+        System.out.println("Decrypt");
+        decrypt_AES_CBC("file-large.bin",aesCBC,aes128cbc,iv);
+
 
     // Q1.b
+        System.out.println();
         System.out.println("Q1.b");
         // Make Instance of the algorithm
         Cipher aesCTR = Cipher. getInstance("AES/CTR/NoPadding");
         // Generate Key
-        IvParameterSpec ctrIv = genIV(aesCBC);
-        // Encrypt file
-        encrypt_AES_CTR("file-small.bin",aesCTR,aes128,ctrIv);
-        encrypt_AES_CTR("file-large.bin",aesCTR,aes128,ctrIv);
+        SecretKey aes128ctr = genAES128(128);
+        IvParameterSpec ctrIv128 = genIV(aesCBC);
+        System.out.println();
+        System.out.println("CTR 128 Small File");
+        System.out.println("Encrypt");
+        encrypt_AES_CTR("file-small.bin",aesCTR,aes128ctr,ctrIv128);
+        System.out.println("Decrypt");
+        decrypt_AES_CTR("file-small.bin",aesCTR,aes128ctr,ctrIv128);
         // Decrypt File
-        decrypt_AES_CTR("file-small.bin",aesCTR,aes128,ctrIv);
-        decrypt_AES_CTR("file-large.bin",aesCTR,aes128,ctrIv);
+        System.out.println();
+        System.out.println("CTR 128 Large File");
+        System.out.println("Encrypt");
+        encrypt_AES_CTR("file-large.bin",aesCTR,aes128ctr,ctrIv128);
+        System.out.println("Decrypt");
+        decrypt_AES_CTR("file-large.bin",aesCTR,aes128ctr,ctrIv128);
     // Q1.c
+        System.out.println();
         System.out.println("Q1.c");
         // Generating 256-bit key
         SecretKey aes256 = genAES128(256);
+        IvParameterSpec ctrIv256 = genIV(aesCBC);
         // Encrypt file
-        encrypt_AES_CTR("file-small.bin",aesCTR,aes256,ctrIv);
-        encrypt_AES_CTR("file-large.bin",aesCTR,aes256,ctrIv);
+        System.out.println();
+        System.out.println("CTR 128 Small File");
+        System.out.println();
+        System.out.println("Encrypt");
+        encrypt_AES_CTR("file-small.bin",aesCTR,aes256,ctrIv256);
+        System.out.println("Decrypt");
+        decrypt_AES_CTR("file-small.bin",aesCTR,aes256,ctrIv256);
+        System.out.println();
+        System.out.println("CTR 128 Large File");
         // Decrypt File
-        decrypt_AES_CTR("file-small.bin",aesCTR,aes256,ctrIv);
-        decrypt_AES_CTR("file-large.bin",aesCTR,aes256,ctrIv);
+        System.out.println("Encrypt");
+        encrypt_AES_CTR("file-large.bin",aesCTR,aes256,ctrIv256);
+        System.out.println("Decrypt");
+        decrypt_AES_CTR("file-large.bin",aesCTR,aes256,ctrIv256);
     // Q1.d
         System.out.println("Q1.d");
+        System.out.println();
         System.out.println("SHA256: ");
+        System.out.println();
         System.out.println("Small File:");
         printHex(hash_256("file-small.bin"));
+        System.out.println();
         System.out.println();
         System.out.println("Large File:");
         printHex(hash_256("file-large.bin"));
         System.out.println();
+        System.out.println();
         System.out.println("SHA512: ");
+        System.out.println();
         System.out.println("Small File:");
         printHex(hash_512("file-small.bin"));
+        System.out.println();
         System.out.println();
         System.out.println("Large File:");
         printHex(hash_512("file-large.bin"));
         System.out.println();
+        System.out.println();
         System.out.print("SHA3-256: ");
+        System.out.println();
         System.out.println("Small File:");
         printHex(hash_sha3256("file-small.bin"));
+        System.out.println();
         System.out.println();
         System.out.println("Large File:");
         printHex(hash_sha3256("file-large.bin"));
         System.out.println();
 	// Q1.e
+        System.out.println();
         System.out.println("Q1.e");
-        KeyPair rsakeyPair = genSymmetricKey(2048,"RSA");
-        RSAPublicKey rsapublicKey = (RSAPublicKey) rsakeyPair.getPublic();
-        RSAPrivateKey rsaprivateKey = (RSAPrivateKey) rsakeyPair.getPrivate();
+        KeyPair rsakeyPair2048 = genSymmetricKey(2048,"RSA");
+        RSAPublicKey rsapublicKey2048 = (RSAPublicKey) rsakeyPair2048.getPublic();
+        RSAPrivateKey rsaprivateKey2048 = (RSAPrivateKey) rsakeyPair2048.getPrivate();
 
         Cipher rsa = Cipher.getInstance("RSA/ECB/OAEPWITHSHA-256ANDMGF1PADDING");
-
-        encrypt_rsa("file-small.bin",rsa,rsapublicKey,2048);
-        decrypt_rsa("file-small.bin",rsa,rsaprivateKey,2048);
-        encrypt_rsa("file-large.bin",rsa,rsapublicKey,2048);
-        decrypt_rsa("file-large.bin",rsa,rsaprivateKey,2048);
+        System.out.println();
+        System.out.println("RSA 2048 Small File");
+        System.out.println("Encrypt");
+        encrypt_rsa("file-small.bin",rsa,rsapublicKey2048,2048);
+        System.out.println("Decrypt");
+        decrypt_rsa("file-small.bin",rsa,rsaprivateKey2048,2048);
+        System.out.println();
+        System.out.println("RSA 2048 Large File");
+        System.out.println("Encrypt");
+        encrypt_rsa("file-large.bin",rsa,rsapublicKey2048,2048);
+        System.out.println("Decrypt");
+        decrypt_rsa("file-large.bin",rsa,rsaprivateKey2048,2048);
     // Q1.f
+        System.out.println();
         System.out.println("Q1.f");
-        rsakeyPair = genSymmetricKey(3072,"RSA");
-        rsapublicKey = (RSAPublicKey) rsakeyPair.getPublic();
-        rsaprivateKey = (RSAPrivateKey) rsakeyPair.getPrivate();
-
-        encrypt_rsa("file-small.bin",rsa,rsapublicKey,3072);
-        decrypt_rsa("file-small.bin",rsa,rsaprivateKey,3072);
-        encrypt_rsa("file-large.bin",rsa,rsapublicKey,3072);
-        decrypt_rsa("file-large.bin",rsa,rsaprivateKey,3072);
+        KeyPair rsakeyPair3072 = genSymmetricKey(3072,"RSA");
+        RSAPublicKey rsapublicKey3072 = (RSAPublicKey) rsakeyPair3072.getPublic();
+        RSAPrivateKey rsaprivateKey3072 = (RSAPrivateKey) rsakeyPair3072.getPrivate();
+        System.out.println();
+        System.out.println("RSA 3072 Small File");
+        System.out.println("Encrypt");
+        encrypt_rsa("file-small.bin",rsa,rsapublicKey3072,3072);
+        System.out.println("Decrypt");
+        decrypt_rsa("file-small.bin",rsa,rsaprivateKey3072,3072);
+        System.out.println("RSA 2048 Large File");
+        System.out.println("Encrypt");
+        encrypt_rsa("file-large.bin",rsa,rsapublicKey3072,3072);
+        System.out.println("Decrypt");
+        decrypt_rsa("file-large.bin",rsa,rsaprivateKey3072,3072);
 	// Q1.g
+        System.out.println();
         System.out.println("Q1.g");
         KeyPair dsakeyPair = genSymmetricKey(2048,"DSA");
         DSAPublicKey dsapublicKey = (DSAPublicKey) dsakeyPair.getPublic();
         DSAPrivateKey dsaprivateKey = (DSAPrivateKey) dsakeyPair.getPrivate();
         Signature dsa = Signature.getInstance("SHA256WithDSA");
         SecureRandom secureRandom2048 = new SecureRandom();
-        System.out.println("Digital Signature of small file:");
+        System.out.println("Time Taken and Digital Signature of small file:");
+        System.out.println();
         byte[] dsa_byte = dsa_sign("file-small.bin",dsa,dsaprivateKey,secureRandom2048);
         printHex(dsa_byte);
         System.out.println();
-        System.out.println("Digital Signature verification:");
+        System.out.println("Time Taken and Digital Signature verification:");
+        System.out.println();
         System.out.println(dsa_verify("file-small.bin",dsa_byte,dsa,dsapublicKey));
 
-        System.out.println("Digital Signature of large file:");
+        System.out.println("Time Taken and Digital Signature of large file:");
+        System.out.println();
         dsa_byte = dsa_sign("file-large.bin",dsa,dsaprivateKey,secureRandom2048);
         printHex(dsa_byte);
         System.out.println();
-        System.out.println("Digital Signature verification:");
+        System.out.println("Time Taken and Digital Signature verification:");
+        System.out.println();
         System.out.println(dsa_verify("file-large.bin",dsa_byte,dsa,dsapublicKey));
 
-        System.out.println("Opposite Files verification check:");
+        System.out.println("Time Taken and Opposite Files verification check:");
+        System.out.println();
         System.out.println(dsa_verify("file-small.bin",dsa_byte,dsa,dsapublicKey));
     // Q1.h
+        System.out.println();
         System.out.println("Q1.h");
-        dsakeyPair = genSymmetricKey(3072,"DSA");
-        dsapublicKey = (DSAPublicKey) dsakeyPair.getPublic();
-        dsaprivateKey = (DSAPrivateKey) dsakeyPair.getPrivate();
+        KeyPair dsakeyPair3072 = genSymmetricKey(3072,"DSA");
+        DSAPublicKey dsapublicKey3072 = (DSAPublicKey) dsakeyPair3072.getPublic();
+        DSAPrivateKey dsaprivateKey3072 = (DSAPrivateKey) dsakeyPair3072.getPrivate();
 
         SecureRandom secureRandom3072 = new SecureRandom();
-        System.out.println("Digital Signature of small file:");
-        dsa_byte = dsa_sign("file-small.bin",dsa,dsaprivateKey,secureRandom3072);
+        System.out.println("Time Taken and Digital Signature of small file:");
+        System.out.println();
+        dsa_byte = dsa_sign("file-small.bin",dsa,dsaprivateKey3072,secureRandom3072);
         printHex(dsa_byte);
         System.out.println();
-        System.out.println("Digital Signature verification:");
-        System.out.println(dsa_verify("file-small.bin",dsa_byte,dsa,dsapublicKey));
+        System.out.println("Time Taken and Digital Signature verification:");
+        System.out.println();
+        System.out.println(dsa_verify("file-small.bin",dsa_byte,dsa,dsapublicKey3072));
 
-        System.out.println("Digital Signature of large file:");
-        dsa_byte = dsa_sign("file-large.bin",dsa,dsaprivateKey,secureRandom3072);
+        System.out.println("Time Taken and Digital Signature of large file:");
+        System.out.println();
+        dsa_byte = dsa_sign("file-large.bin",dsa,dsaprivateKey3072,secureRandom3072);
         printHex(dsa_byte);
         System.out.println();
-        System.out.println("Digital Signature verification:");
-        System.out.println(dsa_verify("file-large.bin",dsa_byte,dsa,dsapublicKey));
+        System.out.println("Time Taken and Digital Signature verification:");
+        System.out.println();
+        System.out.println(dsa_verify("file-large.bin",dsa_byte,dsa,dsapublicKey3072));
 
-        System.out.println("Opposite Files verification check:");
-        System.out.println(dsa_verify("file-small.bin",dsa_byte,dsa,dsapublicKey));
+        System.out.println("Time Taken and Opposite Files verification check:");
+        System.out.println();
+        System.out.println(dsa_verify("file-small.bin",dsa_byte,dsa,dsapublicKey3072));
 
     }
 
     public static SecretKey genAES128(int keySize) throws  NoSuchAlgorithmException{
-        long startTime= System.nanoTime();
-        KeyGenerator aesCBCKeyInstance = KeyGenerator.getInstance("AES");
-        SecureRandom random_key = new SecureRandom();
-        aesCBCKeyInstance.init(keySize,random_key);
-        SecretKey aesCBCKey = aesCBCKeyInstance.generateKey();
-        long endTime = System.nanoTime();
-
+        long startTime=0,endTime = 0;
+        SecretKey aesCBCKey = null;
+        for(int i =0;i <1000000;i++){
+            startTime= System.nanoTime();
+            KeyGenerator aesCBCKeyInstance = KeyGenerator.getInstance("AES");
+            SecureRandom random_key = new SecureRandom();
+            aesCBCKeyInstance.init(keySize,random_key);
+            aesCBCKey = aesCBCKeyInstance.generateKey();
+            endTime = System.nanoTime();
+        }
         long duration = (endTime - startTime);
         System.out.println("Time Taken to Generate Key of length "+keySize+" is: "+duration+" nanoseconds");
         return aesCBCKey;
@@ -161,12 +227,16 @@ public class Main {
     }
 
     public static KeyPair genSymmetricKey(int keySize,String scheme) throws NoSuchAlgorithmException {
-        long startTime= System.nanoTime();
-        KeyPairGenerator key = KeyPairGenerator.getInstance(scheme);
-        SecureRandom random_key = new SecureRandom();
-        key.initialize(keySize,random_key);
-        KeyPair keyPair = key.generateKeyPair();
-        long endTime = System.nanoTime();
+        long startTime = 0,endTime=0;
+        KeyPair keyPair = null;
+        for (int i =0;i<100;i++){
+            startTime= System.nanoTime();
+            KeyPairGenerator key = KeyPairGenerator.getInstance(scheme);
+            SecureRandom random_key = new SecureRandom();
+            key.initialize(keySize,random_key);
+            keyPair = key.generateKeyPair();
+            endTime = System.nanoTime();
+        }
 
         long duration = (endTime - startTime);
         System.out.println("Time Taken to Generate "+scheme+" Key of length "+keySize+" is: "+duration+" nanoseconds");
@@ -175,16 +245,10 @@ public class Main {
     }
 
     public static IvParameterSpec genIV(Cipher instance) throws NoSuchAlgorithmException {
-        long startTime= System.nanoTime();
         SecureRandom randomSecureRandom = SecureRandom.getInstance("SHA1PRNG");
         byte[] iv_initial_counter = new byte[instance.getBlockSize()];
         randomSecureRandom.nextBytes(iv_initial_counter);
-
         IvParameterSpec ivParams = new IvParameterSpec(iv_initial_counter);
-        long endTime = System.nanoTime();
-
-        long duration = (endTime - startTime);
-        System.out.println("Time Taken to Generate IV: "+duration+" nanoseconds");
         return ivParams;
     }
 
@@ -207,6 +271,8 @@ public class Main {
         // Init the algorithm
         aesCBC.init(Cipher.ENCRYPT_MODE, aesCBCKey,ivspec);
         // First Encryption
+        long startTime=0,stopTime=0,resultTime=0;
+        startTime =System.nanoTime();
         byte[] result = aesCBC.update(data);
         outputstream.write(result);
 
@@ -220,13 +286,15 @@ public class Main {
                     result = aesCBC.doFinal(data);
                 }
                 outputstream.write(result);
+                stopTime = System.nanoTime();
             }
         }
-
+        resultTime= stopTime-startTime;
         // File Handling maintenance
         outputstream.flush();
         outputstream.close();
         inputstream.close();
+        System.out.println("Time Taken is:"+resultTime);
         System.out.println("CBC Encryption as:"+outputPath);
     }
 
@@ -243,6 +311,8 @@ public class Main {
         aesCBC.init(Cipher.DECRYPT_MODE, aesCBCKey,ivspec);
 
         // First Encryption
+        long startTime=0,stopTime=0,resultTime=0;
+        startTime =System.nanoTime();
         byte[] result = aesCBC.update(data);
         DECoutputstream.write(result);
 
@@ -257,13 +327,15 @@ public class Main {
                     result = aesCBC.doFinal(data);
                 }
                 DECoutputstream.write(result);
+                stopTime = System.nanoTime();
             }
         }
+        resultTime= stopTime-startTime;
         // File Handling maintenance
         DECoutputstream.flush();
         DECoutputstream.close();
         DECinputstream.close();
-
+        System.out.println("Time Taken is:"+resultTime);
         System.out.println("CBC Decryption as:"+"./com/pratik/Data/AES_CBC_"+aesCBCKey.getEncoded().length*8+"_DEC-"+filename);
     }
 
@@ -280,6 +352,8 @@ public class Main {
         // Init the algorithm
         instance.init(Cipher.ENCRYPT_MODE, aesKey,iv);
         // First Encryption
+        long startTime=0,stopTime=0,resultTime=0;
+        startTime =System.nanoTime();
         byte[] result = instance.update(data);
         outputstream.write(result);
 
@@ -293,13 +367,15 @@ public class Main {
                     result = instance.doFinal(data);
                 }
                 outputstream.write(result);
+                stopTime = System.nanoTime();
             }
         }
+        resultTime= stopTime-startTime;
         // File Handling maintenance
         outputstream.flush();
         outputstream.close();
         inputstream.close();
-
+        System.out.println("Time Taken is:"+resultTime);
         System.out.println("CTR Encryption as:"+outputPath);
     }
 
@@ -316,6 +392,8 @@ public class Main {
         instance.init(Cipher.DECRYPT_MODE, aesKey,iv);
 
         // First Encryption
+        long startTime=0,stopTime=0,resultTime=0;
+        startTime =System.nanoTime();
         byte[] result = instance.update(data);
         DECoutputstream.write(result);
 
@@ -330,12 +408,15 @@ public class Main {
                     result = instance.doFinal(data);
                 }
                 DECoutputstream.write(result);
+                stopTime = System.nanoTime();
             }
         }
+        resultTime= stopTime-startTime;
         // File Handling maintenance
         DECoutputstream.flush();
         DECoutputstream.close();
         DECinputstream.close();
+        System.out.println("Time Taken is:"+resultTime);
         System.out.println("CTR Decryption as:"+"./com/pratik/Data/AES_CTR_"+aesKey.getEncoded().length*8+"_DEC-file-small.bin");
     }
 
@@ -357,6 +438,8 @@ public class Main {
         MessageDigest messeagedigest = MessageDigest.getInstance("SHA-256");
 
         byte[] data      = new byte[64];
+        long startTime=0,stopTime=0,resultTime=0;
+        startTime =System.nanoTime();
         int bytesRead = inputstream.read(data,0,64);
         // First Encryption
         messeagedigest.update(data);
@@ -374,8 +457,11 @@ public class Main {
             }
         }
         byte[] result = messeagedigest.digest();
+        stopTime = System.nanoTime();
+        resultTime= stopTime-startTime;
         // File Handling maintenance
         inputstream.close();
+        System.out.println("Time Taken is:"+resultTime);
         return result;
     }
 
@@ -389,6 +475,8 @@ public class Main {
         byte[] data      = new byte[128];
         int bytesRead = inputstream.read(data,0,128);
         // First Encryption
+        long startTime=0,stopTime=0,resultTime=0;
+        startTime =System.nanoTime();
         messeagedigest.update(data);
         //outputstream.write(result);
 
@@ -404,8 +492,11 @@ public class Main {
             }
         }
         byte[] result = messeagedigest.digest();
+        stopTime = System.nanoTime();
+        resultTime= stopTime-startTime;
         // File Handling maintenance
         inputstream.close();
+        System.out.println("Time Taken is:"+resultTime);
         return result;
     }
 
@@ -416,6 +507,8 @@ public class Main {
         int size = inputstream.available();
         SHA3.DigestSHA3 messagedigest = new SHA3.Digest256();
         byte[] data      = new byte[136];
+        long startTime=0,stopTime=0,resultTime=0;
+        startTime =System.nanoTime();
         int bytesRead = inputstream.read(data,0,136);
         // First Encryption
 
@@ -438,8 +531,11 @@ public class Main {
         //System.out.println();
         //printHex(data);
         byte[] result = messagedigest.digest();
+        stopTime = System.nanoTime();
         // File Handling maintenance
         inputstream.close();
+        resultTime= stopTime-startTime;
+        System.out.println("Time Taken is:"+resultTime);
         return result;
 
     }
@@ -459,6 +555,8 @@ public class Main {
         rsa.init(Cipher.ENCRYPT_MODE,publicKey);
 
         // First Encryption
+        long startTime=0,stopTime=0,resultTime=0;
+        startTime =System.nanoTime();
         byte[] result = rsa.doFinal(data);
         outputstream.write(result);
 
@@ -475,6 +573,7 @@ public class Main {
                     bytesRead = -1;
                 }
                 outputstream.write(result);
+                stopTime = System.nanoTime();
                 //System.out.println("Result:"+result.length);
             }
         }
@@ -482,7 +581,8 @@ public class Main {
         outputstream.flush();
         outputstream.close();
         outputstream.close();
-
+        resultTime= stopTime-startTime;
+        System.out.println("Time Taken is:"+resultTime);
         System.out.println("Encrypted as:"+outputPath);
     }
 
@@ -509,6 +609,8 @@ public class Main {
         rsa.init(Cipher.DECRYPT_MODE, privateKey);
         //System.out.println("Length"+data.length);
         // First Encryption
+        long startTime=0,stopTime=0,resultTime=0;
+        startTime =System.nanoTime();
         byte[] result = rsa.doFinal(data);
         outputstream.write(result);
 
@@ -525,13 +627,15 @@ public class Main {
                     bytesRead = -1;
                 }
                 outputstream.write(result);
+                stopTime = System.nanoTime();
             }
         }
         // File Handling maintenance
         outputstream.flush();
         outputstream.close();
         outputstream.close();
-
+        resultTime= stopTime-startTime;
+        System.out.println("Time Taken is:"+resultTime);
         System.out.println("Decrypted as:"+filepath);
     }
 
@@ -543,13 +647,16 @@ public class Main {
         dsa.initSign(privateKey,secureRandom);
 
         byte[] data      = new byte[inputstream.available()];
-
+        long startTime=0,stopTime=0,resultTime=0;
+        startTime =System.nanoTime();
         dsa.update(data);
 
         byte[] result = dsa.sign();
-
+        stopTime = System.nanoTime();
         // File Handling maintenance
         inputstream.close();
+        resultTime= stopTime-startTime;
+        System.out.println("Time Taken is:"+resultTime);
         return result;
     }
 
@@ -560,9 +667,12 @@ public class Main {
         dsa.initVerify(publicKey);
 
         byte[] data      = new byte[inputstream.available()];
-
+        long startTime=0,stopTime=0,resultTime=0;
+        startTime =System.nanoTime();
         dsa.update(data);
-
+        stopTime = System.nanoTime();
+        resultTime= stopTime-startTime;
+        System.out.println("Time Taken is:"+resultTime);
         return dsa.verify(digitalSignature);
     }
 }
